@@ -194,13 +194,15 @@ static bool close_data_spool_file(DCR *dcr, bool end_of_spool)
    V(mutex);
 
    P(dcr->dev->spool_mutex);
+   dcr->dev->spool_size -= dcr->job_spool_size;
    dcr->job_spool_size = 0;
    V(dcr->dev->spool_mutex);
 
-   make_unique_data_spool_filename(dcr, name);
    close(dcr->spool_fd);
    dcr->spool_fd = -1;
    dcr->spooling = false;
+
+   make_unique_data_spool_filename(dcr, name);
    secure_erase(dcr->jcr, name);
    Dmsg1(100, "Deleted spool file: %s\n", name);
    free_pool_memory(name);
