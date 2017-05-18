@@ -181,6 +181,15 @@ static bool close_data_spool_file(DCR *dcr, bool end_of_spool)
 {
    POOLMEM *name = get_pool_memory(PM_MESSAGE);
 
+   close(dcr->spool_fd);
+   dcr->spool_fd = -1;
+   dcr->spooling = false;
+
+   make_unique_data_spool_filename(dcr, name);
+   secure_erase(dcr->jcr, name);
+   Dmsg1(100, "Deleted spool file: %s\n", name);
+   free_pool_memory(name);
+
    P(mutex);
    spool_stats.data_jobs--;
    if (end_of_spool) {
@@ -197,15 +206,6 @@ static bool close_data_spool_file(DCR *dcr, bool end_of_spool)
    dcr->dev->spool_size -= dcr->job_spool_size;
    dcr->job_spool_size = 0;
    V(dcr->dev->spool_mutex);
-
-   close(dcr->spool_fd);
-   dcr->spool_fd = -1;
-   dcr->spooling = false;
-
-   make_unique_data_spool_filename(dcr, name);
-   secure_erase(dcr->jcr, name);
-   Dmsg1(100, "Deleted spool file: %s\n", name);
-   free_pool_memory(name);
 
    return true;
 }
