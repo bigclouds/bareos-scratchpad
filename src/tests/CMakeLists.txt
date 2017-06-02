@@ -1,0 +1,48 @@
+#   BAREOS�� - Backup Archiving REcovery Open Sourced
+#
+#   Copyright (C) 2017-2017 Bareos GmbH & Co. KG
+#
+#   This program is Free Software; you can redistribute it and/or
+#   modify it under the terms of version three of the GNU Affero General Public
+#   License as published by the Free Software Foundation and included
+#   in the file LICENSE.
+#
+#   This program is distributed in the hope that it will be useful, but
+#   WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+#   Affero General Public License for more details.
+#
+#   You should have received a copy of the GNU Affero General Public License
+#   along with this program; if not, write to the Free Software
+#   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+#   02110-1301, USA.
+
+cmake_minimum_required(VERSION 2.8.9)
+project(bareos)
+set(CMAKE_BUILD_TYPE Release)
+
+include_directories(../include ..)
+
+set(LIBS pthread dl)
+
+
+add_executable(bregtest bregtest.cc)
+target_link_libraries(bregtest  bareos ${LIBS})
+
+add_executable(testls testls.cc)
+target_link_libraries(testls bareosfind bareos  ${LIBS})
+
+#add_executable(bbatch bbatch.cc)
+#target_link_libraries(bbatch bareoscats  ${LIBS})
+
+#add_executable(bvfs_test bvfs_test.cc)
+#target_link_libraries(bvfs_test bareoscats bareossql  ${LIBS})
+
+#add_executable(cats_test cats_test.cc)
+#target_link_libraries(cats_test bareoscats bareossql  ${LIBS})
+
+add_executable(gigaslam gigaslam.cc)
+target_link_libraries(gigaslam  ${LIBS})
+
+add_executable(grow grow.cc)
+target_link_libraries(grow bareos ${LIBS})
